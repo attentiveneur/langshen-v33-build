@@ -49,26 +49,26 @@ jobs:
             P=$(find _src -maxdepth 5 -name project.pbxproj -path '*ThreeOneOSFive.xcodeproj*' | head -n 1 || true)
             if [ -z "${P:-}" ]; then echo "跳过：包里没有 Xcode 工程"; rm -rf _src; continue; fi
             D=$(cd "$(dirname "$P")/.." && pwd)
-            if grep -q 'MARKETING_VERSION = 33\.3' "$P"; then
+            if grep -q 'MARKETING_VERSION = 33\.4' "$P"; then
               BEST="$D"; echo "命中压缩包：$z → $D"; break
             fi
-            echo "跳过：不是 v33.3"; rm -rf _src
+            echo "跳过：不是 v33.4"; rm -rf _src
           done
 
           if [ -z "$BEST" ]; then
-            for d in $(ls -1d LSPakManager-Source-v33.3*/ 2>/dev/null | sed 's:/$::' | sort -rV || true); do
-              if [ -f "$d/ThreeOneOSFive.xcodeproj/project.pbxproj" ] && grep -q 'MARKETING_VERSION = 33\.3' "$d/ThreeOneOSFive.xcodeproj/project.pbxproj"; then
+            for d in $(ls -1d LSPakManager-Source-v33.4*/ 2>/dev/null | sed 's:/$::' | sort -rV || true); do
+              if [ -f "$d/ThreeOneOSFive.xcodeproj/project.pbxproj" ] && grep -q 'MARKETING_VERSION = 33\.4' "$d/ThreeOneOSFive.xcodeproj/project.pbxproj"; then
                 BEST="$d"; echo "命中文件夹：$d"; break
               fi
             done
           fi
 
           if [ -z "$BEST" ]; then
-            echo "::error::仓库里没找到 v33.3 源码"
+            echo "::error::仓库里没找到 v33.4 源码"
             {
-              echo "## ⛔ 没找到 v33.3 源码"
+              echo "## ⛔ 没找到 v33.4 源码"
               echo ""
-              echo "把 \`LSPakManager-Source-v33.3.zip\` 原样传到仓库根目录（别解压、别改名），再点 Run workflow。"
+              echo "把 \`LSPakManager-Source-v33.4.zip\` 原样传到仓库根目录（别解压、别改名），再点 Run workflow。"
             } >> "$GITHUB_STEP_SUMMARY"
             ls -la *.zip 2>/dev/null || true
             exit 1
@@ -95,8 +95,8 @@ jobs:
           chk() { if [ "$1" = "1" ]; then echo "  ✅ $2"; else echo "  ❌ $2"; FAIL=1; fi; }
 
           echo "==== 4.1 版本与标识 ===="
-          grep -q 'MARKETING_VERSION = 33\.3' "$PBX" && chk 1 "版本 33.3" || chk 0 "版本 33.3"
-          grep -q 'CURRENT_PROJECT_VERSION = 101' "$PBX" && chk 1 "构建号 101" || chk 0 "构建号 101"
+          grep -q 'MARKETING_VERSION = 33\.4' "$PBX" && chk 1 "版本 33.4" || chk 0 "版本 33.4"
+          grep -q 'CURRENT_PROJECT_VERSION = 102' "$PBX" && chk 1 "构建号 102" || chk 0 "构建号 102"
           grep -qE 'PRODUCT_BUNDLE_IDENTIFIER = "?com\.apple\.mobile\.MobileHouseArrest"?' "$PBX" \
             && chk 1 "包标识 com.apple.mobile.MobileHouseArrest" || chk 0 "包标识"
           grep -q '<string>浪神</string>' "$PLIST" && chk 1 "显示名 浪神" || chk 0 "显示名 浪神"
@@ -242,8 +242,8 @@ jobs:
           grep -q 'LSThemeColor.color(th.primary' "$APP/helpers/SplashLicenseGate.swift" && chk 1 "配色走后台配置" || chk 0 "配色走后台配置"
           grep -q 'struct LSFillImage' "$APP/helpers/SplashLicenseGate.swift" && chk 1 "后台背景图满屏组件在" || chk 0 "后台背景图满屏组件在"
           grep -q 'ls.theme.json' "$APP/helpers/LicenseTheme.swift" && chk 1 "断网回落本机缓存" || chk 0 "断网回落本机缓存"
-          grep -q '<string>33.3</string>' "$PLIST" && chk 1 "包版本 33.3" || chk 0 "包版本 33.3"
-          grep -qF 'Text("v33.3")' "$APP/ContentView.swift" && chk 1 "界面右上角显示 v33.3" || chk 0 "界面右上角显示 v33.3"
+          grep -q '<string>33.4</string>' "$PLIST" && chk 1 "包版本 33.4" || chk 0 "包版本 33.4"
+          grep -qF 'Text("v33.4")' "$APP/ContentView.swift" && chk 1 "界面右上角显示 v33.4" || chk 0 "界面右上角显示 v33.4"
 
           echo "==== 4.5i v33 · 注入/修复弹窗 + 网络检查 + 测速 ===="
           grep -q 'private func resultPopupCard' "$APP/ContentView.swift" && chk 1 "结果弹窗改成自绘浮层" || chk 0 "结果弹窗改成自绘浮层"
@@ -263,7 +263,7 @@ jobs:
           grep -q 'dnsMilliseconds' "$APP/ContentView.swift" && chk 1 "DNS 计时函数" || chk 0 "DNS 计时函数"
           grep -q 'speedSeedURL' "$APP/ContentView.swift" && chk 1 "测速优先用自己的发布服务器" || chk 0 "测速源"
 
-          echo "==== 4.5k v33.3 · 云资源库 + 代理中心 + 中控台 ===="
+          echo "==== 4.5k v33.4 · 云资源库 + 代理中心 + 中控台 ===="
           grep -q 'v33.0 · 云资源库：后台传文件' "$APP/ContentView.swift" && chk 1 "云资源库模块在" || chk 0 "云资源库模块在"
           grep -q 'ResourceLibraryView()' "$APP/ContentView.swift" && chk 1 "云资源库已进首页布局" || chk 0 "云资源库已进首页布局"
           grep -q 'https://ek.x8iu.com/v33' "$APP/ContentView.swift" && chk 1 "云资源库直连中控台直链" || chk 0 "云资源库直连中控台直链"
@@ -276,8 +276,8 @@ jobs:
           # 布局顺序：云资源库在代理中心之前
           python3 -c "import sys;s=open(sys.argv[1],encoding='utf-8').read();b=s[s.find('var body: some View'):];b=b[:b.find('.frame(maxWidth: contentMax)')];i=b.find('resourceRow');j=b.find('agentRow');sys.exit(0 if 0<=i<j else 1)" "$APP/ContentView.swift" && chk 1 "布局顺序：云资源库在上、代理中心在最下" || chk 0 "布局顺序：云资源库在上、代理中心在最下"
 
-          echo "==== 4.5l v33.3 · 注入列表单文件删除 ===="
-          grep -q 'v33.3 · 单文件删除' "$APP/ContentView.swift" && chk 1 "单文件删除模块在" || chk 0 "单文件删除模块在"
+          echo "==== 4.5l v33.4 · 注入列表单文件删除 ===="
+          grep -q 'v33.4 · 单文件删除' "$APP/ContentView.swift" && chk 1 "单文件删除模块在" || chk 0 "单文件删除模块在"
           grep -q 'func deleteInboxFile' "$APP/ContentView.swift" && chk 1 "待注入可删" || chk 0 "待注入可删"
           grep -q 'func deleteImportedFile' "$APP/ContentView.swift" && chk 1 "已注入可从游戏删" || chk 0 "已注入可从游戏删"
           grep -q 'func confirmPendingDelete' "$APP/ContentView.swift" && chk 1 "二次确认才真删" || chk 0 "二次确认才真删"
@@ -360,6 +360,22 @@ jobs:
           grep -q 'Accept-Ranges' "$APP/ContentView.swift" \
             && chk 1 "断点续传判断" || chk 0 "断点续传判断"
 
+          echo "==== 4.5m v33.4 · 防篡改 ===="
+          [ -f "$APP/helpers/IntegrityGuard.swift" ] \
+            && chk 1 "IntegrityGuard.swift 在" || chk 0 "IntegrityGuard.swift 在"
+          grep -q 'IntegrityGuard.swift in Sources' "$PBX" \
+            && chk 1 "自校验已加入编译" || chk 0 "自校验已加入编译"
+          grep -q 'LSINTG<' "$APP/helpers/IntegrityGuard.swift" \
+            && chk 1 "印章槽结构在" || chk 0 "印章槽结构在"
+          grep -q 'LSIntegrity.enforce' "$APP/ContentView.swift" \
+            && chk 1 "主流程埋了校验点" || chk 0 "主流程埋了校验点"
+          grep -q 'LSIntegrity.enforce' "$APP/helpers/LicenseManager.swift" \
+            && chk 1 "卡密埋了校验点" || chk 0 "卡密埋了校验点"
+          grep -q 'LSIntegrity.warmUp' "$APP/App.swift" \
+            && chk 1 "启动预热在" || chk 0 "启动预热在"
+          [ -f "$SRC/Tools/stamp_integrity.py" ] \
+            && chk 1 "盖章脚本在" || chk 0 "盖章脚本在"
+
           echo "==== 4.6 工程完整性 ===="
           N=$(ls -1 "$APP"/*.swift "$APP"/helpers/*.swift "$APP"/views/*.swift 2>/dev/null | wc -l | tr -d ' ')
           [ "$N" -ge 40 ] && chk 1 "Swift 文件 $N 个" || chk 0 "Swift 文件只有 $N 个"
@@ -370,7 +386,7 @@ jobs:
             {
               echo "## ⛔ 源码校验没过，已停止编译"
               echo ""
-              echo "看上面标 ❌ 的那几行，把源码包换成完整的 v33.3 再跑。"
+              echo "看上面标 ❌ 的那几行，把源码包换成完整的 v33.4 再跑。"
             } >> "$GITHUB_STEP_SUMMARY"
             exit 1
           fi
@@ -385,7 +401,7 @@ jobs:
         run: |
           set +e
           cd "$SRC" || { echo "::error title=出错::进不去源码目录"; exit 1; }
-          echo "==== 开始编译 v33.3 ===="
+          echo "==== 开始编译 v33.4 ===="
           xcodebuild \
             -project ThreeOneOSFive.xcodeproj \
             -scheme OGIOS \
@@ -420,7 +436,7 @@ jobs:
           fi
 
           {
-            echo "## 🔴 v33.3 编译错误"
+            echo "## 🔴 v33.4 编译错误"
             echo ""
             echo '```'
             cat /tmp/errs.txt
@@ -465,6 +481,12 @@ jobs:
           codesign --remove-signature "$APP/$EXE" 2>/dev/null || true
           echo "  已清理，主程序：$EXE"
 
+          echo "==== 6.1b 写入防篡改印章 ===="
+          STAMP="$SRC/Tools/stamp_integrity.py"
+          [ -f "$STAMP" ] || { echo "::error::缺盖章脚本 Tools/stamp_integrity.py"; exit 1; }
+          python3 "$STAMP" "$APP/$EXE" || { echo "::error::盖章失败，禁止出包"; exit 1; }
+          python3 "$STAMP" "$APP/$EXE" --verify || { echo "::error::盖章回验失败，禁止出包"; exit 1; }
+
           echo "==== 6.2 按规范搭 Payload ===="
           rm -rf /tmp/pkg && mkdir -p /tmp/pkg/Payload
           cp -R "$APP" /tmp/pkg/Payload/
@@ -480,11 +502,13 @@ jobs:
           [ -f "$APPIN/splashWide.mp4" ] && echo "  ✅ ipa 里有横版启动视频" || { echo "::error::ipa 里没横版视频"; exit 1; }
 
           echo "==== 6.3 打包 + 回验 ===="
-          python3 - "$APPIN" "$EXE" <<'PY'
+          python3 - "$APPIN" "$EXE" "$SRC/Tools/stamp_integrity.py" <<'PY'
           import os, sys, zipfile, hashlib, shutil, json
 
           root = '/tmp/pkg'
           appin, exe = sys.argv[1], sys.argv[2]
+          stamp_script = sys.argv[3]
+          import subprocess
 
           entries = []          # (kind, arcsname, fullpath, mode)
           for dirpath, dirnames, filenames in os.walk(root):
@@ -526,8 +550,8 @@ jobs:
                           z.writestr(zi, data, compress_type=method)
 
           outputs = [
-              ('/tmp/langshen-v33.3-unsigned.ipa', zipfile.ZIP_DEFLATED),
-              ('/tmp/langshen-v33.3-store.ipa',   zipfile.ZIP_STORED),
+              ('/tmp/langshen-v33.4-unsigned.ipa', zipfile.ZIP_DEFLATED),
+              ('/tmp/langshen-v33.4-store.ipa',   zipfile.ZIP_STORED),
           ]
           for out, method in outputs:
               build(out, method)
@@ -543,24 +567,31 @@ jobs:
                   assert not any(n.startswith('__MACOSX') for n in names), '有 __MACOSX'
                   assert not any(n.startswith('.') for n in names), '有隐藏垃圾文件'
                   h = hashlib.sha256(open(out, 'rb').read()).hexdigest()
+                  # 把主程序从 ipa 里抠出来，单独再验一次防篡改印章
+                  blob = z.read('Payload/%s/%s' % (os.path.basename(appin), exe))
+                  open('/tmp/stamped_check', 'wb').write(blob)
+                  r = subprocess.run(['python3', stamp_script, '/tmp/stamped_check', '--verify'],
+                                     capture_output=True, text=True)
+                  assert r.returncode == 0, 'ipa 里的印章对不上：\n' + r.stdout + r.stderr
+                  print('  ✅ %s 防篡改印章已验过' % os.path.basename(out))
               size = os.path.getsize(out)
               print('  ✅ %s  %d 字节  %.1f MB' % (os.path.basename(out), size, size/1024/1024))
               print('     sha256 %s' % h)
           print('  两种压缩方式都通过回验')
           PY
 
-          cp /tmp/langshen-v33.3-unsigned.ipa /tmp/langshen-v33.3-store.ipa "$GITHUB_WORKSPACE/"
-          ls -lh "$GITHUB_WORKSPACE"/langshen-v33.3-*.ipa
+          cp /tmp/langshen-v33.4-unsigned.ipa /tmp/langshen-v33.4-store.ipa "$GITHUB_WORKSPACE/"
+          ls -lh "$GITHUB_WORKSPACE"/langshen-v33.4-*.ipa
 
           {
             echo "## ✅ 两个 ipa 都打好了"
             echo ""
             echo '```'
-            shasum -a 256 "$GITHUB_WORKSPACE"/langshen-v33.3-unsigned.ipa "$GITHUB_WORKSPACE"/langshen-v33.3-store.ipa
+            shasum -a 256 "$GITHUB_WORKSPACE"/langshen-v33.4-unsigned.ipa "$GITHUB_WORKSPACE"/langshen-v33.4-store.ipa
             echo '```'
             echo ""
-            echo "- 先装 \`langshen-v33.3-unsigned.ipa\`（标准包，全能签 / TrollStore 都认）"
-            echo "- 万一某个工具报「提取失败」，换 \`langshen-v33.3-store.ipa\`（同内容，不压缩存储，最笨的读取器也能读）"
+            echo "- 先装 \`langshen-v33.4-unsigned.ipa\`（标准包，全能签 / TrollStore 都认）"
+            echo "- 万一某个工具报「提取失败」，换 \`langshen-v33.4-store.ipa\`（同内容，不压缩存储，最笨的读取器也能读）"
             echo ""
             echo "下载后可以先核对上面这两个 sha256，文件不完整就是下载被截断了。"
           } >> "$GITHUB_STEP_SUMMARY"
@@ -568,10 +599,10 @@ jobs:
       - name: 7 上传 ipa
         uses: actions/upload-artifact@v4
         with:
-          name: langshen-v33.3-ipa
+          name: langshen-v33.4-ipa
           path: |
-            langshen-v33.3-unsigned.ipa
-            langshen-v33.3-store.ipa
+            langshen-v33.4-unsigned.ipa
+            langshen-v33.4-store.ipa
           if-no-files-found: error
 
       - name: 8 出错时补打一遍日志结尾
