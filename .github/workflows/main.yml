@@ -96,7 +96,7 @@ jobs:
 
           echo "==== 4.1 版本与标识 ===="
           grep -q 'MARKETING_VERSION = 33\.7' "$PBX" && chk 1 "版本 33.7" || chk 0 "版本 33.7"
-          grep -q 'CURRENT_PROJECT_VERSION = 104' "$PBX" && chk 1 "构建号 104" || chk 0 "构建号 104"
+          grep -q 'CURRENT_PROJECT_VERSION = 105' "$PBX" && chk 1 "构建号 105" || chk 0 "构建号 105"
           grep -qE 'PRODUCT_BUNDLE_IDENTIFIER = "?com\.apple\.mobile\.MobileHouseArrest"?' "$PBX" \
             && chk 1 "包标识 com.apple.mobile.MobileHouseArrest" || chk 0 "包标识"
           grep -q '<string>浪神</string>' "$PLIST" && chk 1 "显示名 浪神" || chk 0 "显示名 浪神"
